@@ -25,7 +25,7 @@ Once Vagrant has started the VMs you can access these URLs from a browser of you
 
 Access some resources through _haproxy-1_ (port 8081)
 ```
-$ for x in $(seq 1 5); do 
+$ for x in $(seq 1 5); do
 >   printf "%05d - " ${x};
 >   curl -H "Cookie: c1=1; c2=2; JSESSIONID=$(md5 -q -s _${x})" http://localhost:8081;
 > done
@@ -46,9 +46,9 @@ have not seen any request so far.
 Now run some requests against the other load balancer (forwarded port 9081):
 
 ```
-$ for x in $(seq 101 105); do 
+$ for x in $(seq 101 105); do
 >   printf "%05d - " ${x};
->   curl -H "Cookie: c1=1; c2=2; JSESSIONID=$(md5 -q -s _${x})" http://localhost:8081;
+>   curl -H "Cookie: c1=1; c2=2; JSESSIONID=$(md5 -q -s _${x})" http://localhost:9081;
 > done
 ```
 
@@ -80,10 +80,10 @@ As you can see, the two instances, even on different VMs have synchronized their
 * Reload _haproxy-1_
 
         vagrant ssh haproxy-1 -c 'sudo service haproxy reload'
-        
+
 * Re-Run a previous set of requests:
 
-        $ for x in $(seq 1 5); do 
+        $ for x in $(seq 1 5); do
         >   printf "%05d - " ${x};
         >   curl -H "Cookie: c1=1; c2=2; JSESSIONID=$(md5 -q -s _${x})" http://localhost:8081;
         > done
