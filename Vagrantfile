@@ -54,6 +54,7 @@ Vagrant.configure(2) do |config|
         done
         sudo cp /vagrant/site-*.conf /etc/apache2/sites-available
         sudo cp /vagrant/ports.conf /etc/apache2/
+        sudo cp /vagrant/apache2.conf /etc/apache2
         sudo service apache2 restart
       SHELL
   end
