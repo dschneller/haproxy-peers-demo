@@ -30,8 +30,8 @@ Vagrant.configure(2) do |config|
           sudo add-apt-repository ppa:vbernat/haproxy-1.5
           sudo apt-get update
           sudo apt-get install -y haproxy hatop
-          sudo cp /vagrant/haproxy.cfg /etc/haproxy
-          sudo cp /vagrant/rsyslog.conf /etc/
+          sudo cp /vagrant/configs/haproxy.cfg /etc/haproxy
+          sudo cp /vagrant/configs/rsyslog.conf /etc/
           sudo service rsyslog restart
           sudo service haproxy restart
         SHELL
@@ -46,14 +46,14 @@ Vagrant.configure(2) do |config|
         sudo apt-get install -y apache2
         sudo a2enmod headers
         sudo a2dissite 000-default
-        cd /vagrant
+        cd /vagrant/configs
         for x in site-*.conf; do
           sudo cp ${x} /etc/apache2/sites-available
           sudo a2ensite ${x%.*}
         done
-        sudo cp /vagrant/site-*.conf /etc/apache2/sites-available
-        sudo cp /vagrant/ports.conf /etc/apache2/
-        sudo cp /vagrant/apache2.conf /etc/apache2
+        sudo cp site-*.conf /etc/apache2/sites-available
+        sudo cp ports.conf /etc/apache2/
+        sudo cp apache2.conf /etc/apache2
         sudo service apache2 restart
       SHELL
   end
