@@ -53,7 +53,7 @@ Running the same 5 requests again will yield the same result, even though there 
 Now run some (different) requests against the other load balancer (forwarded port 9080) with `access-2.sh`:
 
 ```
-$ ./access-2.sh 101 105
+./access-2.sh 101 105
 ```
 
 You will see responses similar to before:
@@ -70,7 +70,7 @@ At first one might have expected the calls to be handled by backends 6,7,1,2,3 b
 
 Now repeat the same requests, but against `haproxy-1` (port 8080):
 ```
-$ ./access-1.sh 101 105
+./access-1.sh 101 105
 ```
 
 This looks promising:
