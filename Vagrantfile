@@ -22,7 +22,6 @@ Vagrant.configure(2) do |config|
         octet = i + 10
         node.vm.hostname = "haproxy-#{i}"
         node.vm.network "forwarded_port", guest: 80, host: port1
-        node.vm.network "forwarded_port", guest: 81, host: port1+1
         node.vm.network "forwarded_port", guest: 8404, host: port2
 
         node.vm.network "private_network", ip: "192.168.33.#{octet}"

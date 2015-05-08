@@ -22,14 +22,14 @@ Once Vagrant has started the VMs you can access these URLs from a browser of you
 
 ## Synchronization across haproxy instances
 
-Access some resources through `haproxy-1` (port 8081). You can use the `access-1.sh` script. It expects two numbers as parameters that will help to generate cookie values.
+Access some resources through `haproxy-1` (port 8080). You can use the `access-1.sh` script. It expects two numbers as parameters that will help to generate cookie values.
 
 This is the content of the script:
 ```
 #!/bin/bash
 for x in $(seq ${1} ${2}); do
    printf "%05d - " ${x};
-   curl -H "Cookie: c1=1; c2=2; JSESSIONID=$(md5 -q -s _${x})" http://localhost:8081;
+   curl -H "Cookie: c1=1; c2=2; JSESSIONID=$(md5 -q -s _${x})" http://localhost:8080;
 done
 ```
 
@@ -48,14 +48,12 @@ You will see which backend responded to each request:
 00005 - Backend 5
 ```
 
-
 Running the same 5 requests again will yield the same result, even though there are still 2 backends left that have not seen any request so far and would be free. The stickiness based on cookies makes sure they reach the same backend.
 
-Now run some (different) requests against the other load balancer (forwarded port 9081) with `access-2.sh`:
+Now run some (different) requests against the other load balancer (forwarded port 9080) with `access-2.sh`:
 
 ```
 $ ./access-2.sh 101 105
-
 ```
 
 You will see responses similar to before:
@@ -70,7 +68,7 @@ You will see responses similar to before:
 At first one might have expected the calls to be handled by backends 6,7,1,2,3 because of the round-robin algorithm. It is important to take into account, though, that the peers do their balancing independet of each other! Because `haproxy-2` did not yet receive any requests, and because there were no sessions 101-105 before, it just starts with the first backend.
 
 
-Now repeat the same requests, but against `haproxy-1` (port 8081):
+Now repeat the same requests, but against `haproxy-1` (port 8080):
 ```
 $ ./access-1.sh 101 105
 ```
@@ -138,6 +136,5 @@ Even though one instance is down and the other one was reloaded, the stick-table
 ```
 Because `haproxy.cfg` is identical on both load balancers, they both "know" their own host name as a peer to synchronize stick-tables with. This means even when the second server is down, reloading the remaining one will maintain the stickiness information. On reload, the start-stop-script will first fire up a new process which will then find the currently running one (by finding its own host name in the peers list) and transfer its state. Only once "the baton has been passed on" to the new process will the old one shut down.
 
-That way, you can now stop/start and reload instances almost at will, provided that at least one instance remains running at any time. Be advised, that using `service haproxy restart` will actually first stop the old instance and then bring up a new one, so if you did this to the last running instance, session information would actually be lost!
-
+That way, you can now stop/start and **reload** instances almost at will, provided that _at least one instance remains running_ at any time. Be advised, that using `service haproxy restart` will actually first stop the old instance and then bring up a new one, so if you did this to the last running instance, session information would actually be lost!
 
