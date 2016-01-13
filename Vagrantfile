@@ -43,6 +43,7 @@ Vagrant.configure(2) do |config|
       web.vm.network "private_network", ip: "192.168.33.10"
       web.vm.provision "shell", inline: <<-SHELL
         sudo locale-gen de_DE.UTF-8
+        sudo apt-get update
         sudo apt-get install -y apache2
         sudo a2enmod headers
         sudo a2dissite 000-default
